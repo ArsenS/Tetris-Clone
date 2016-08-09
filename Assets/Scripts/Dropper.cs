@@ -30,6 +30,7 @@ public class Dropper : MonoBehaviour
             {
                 gameObject.tag = "Landed";
                 grid.SetTetriminoToGrid(this.gameObject);
+                grid.ClearBoard();
             }
 
             timer = 0f;
@@ -40,29 +41,7 @@ public class Dropper : MonoBehaviour
     {
         return gameObject.tag == "Landed";
     }
-    /*
-    public bool TetriminoHasHitBottom()
-    {
-        foreach (Transform cube in transform)
-        {
-            if (CubeHasHitBottom(cube))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    bool CubeHasHitBottom(Transform cube)
-    {
-        if (Mathf.Round(cube.position.y) == 0)
-        {
-            return true;
-        }
-
-        else return false;
-    }
-    */
     public bool TetriminoCanDrop()
     {
         foreach (Transform cube in transform)
@@ -78,11 +57,13 @@ public class Dropper : MonoBehaviour
 
     bool CubeCanDrop(Transform cube)
     {
-        if ((cube.position.y - 1f) >= 0f && grid.IsValidPosition((int)cube.position.x, (int)cube.position.y -1))
+        if ((Mathf.Round(cube.position.y) - 1f) >= 0f && grid.IsValidPosition((int)Mathf.Round(cube.position.x), (int)Mathf.Round(cube.position.y - 1)))
         {
             return true;
         }
-
-        else return false;
+        else
+        {
+            return false;
+        }
     }
 }

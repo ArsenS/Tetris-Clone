@@ -58,8 +58,6 @@ public class Mover : MonoBehaviour {
         else return false;
     }
 
-    //cube not used
-    //what the shit?? fix?
     bool TetriminoCanMove(float horizontalMove, float verticalMove)
     {
         foreach (Transform cube in transform)

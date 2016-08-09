@@ -10,7 +10,7 @@ public class Spawner : MonoBehaviour {
 
     void Start()
     {
-        
+        Application.targetFrameRate = 60;
         tetrimino = SpawnRandomTetrimino();
         dropper = tetrimino.GetComponent<Dropper>();
     }

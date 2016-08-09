@@ -3,13 +3,13 @@ using System.Collections;
 
 public class Grid : MonoBehaviour {
 
-    
-    private GameObject[,] gameBoard = new GameObject[10, 20];
+    public Mover mover;
 
+    private GameObject[,] gameBoard = new GameObject[10, 20];
 
     public bool IsValidPosition(int x, int y)
     {
-        if (x >= 0 && x <= 10 && y >= 0 && y <= 20 && gameBoard[x, y] == null)
+        if (x >= 0 && x < 10 && y >= 0 && y < 20 && gameBoard[x, y] == null)
         {
             return true;
         }
@@ -37,41 +37,61 @@ public class Grid : MonoBehaviour {
     {
         foreach(Transform cube in tetrimino.transform)
         {
-            gameBoard[(int)cube.position.x, (int)cube.position.y] = cube.gameObject;
+            gameBoard[(int)Mathf.Round(cube.position.x), (int)Mathf.Round(cube.position.y)] = cube.gameObject;
         }
         //PrintBoard();
     }
 
-    bool LineIsFull(int index)
+    public void ClearBoard()
     {
-        for (int j = 0; j < gameBoard.GetLength(0); j++)
+        for (int line = 0; line < gameBoard.GetLength(1); line++)
         {
-            if (gameBoard[index, j] == null)
+            if (LineIsFull(line))
+            {
+                Debug.Log("FULLLLLLHOUSE");
+                ClearLine(line);
+                //line--;
+            }
+        }
+    }
+
+    bool LineIsFull(int line)
+    {
+        for (int block = 0; block < gameBoard.GetLength(0); block++)
+        {
+            //Debug.Log("x: " + line + ", y: " + i);
+            //Debug.Log(gameBoard[square, line]);
+            if (gameBoard[block, line] == null)
             {
                 return false;
             }
         }
-
         return true;
     }
 
-    void ClearLine(int index)
+    void ClearLine(int line)
     {
-        for (int j = 0; j < gameBoard.GetLength(0); j++)
+        for (int block = 0; block < gameBoard.GetLength(0); block++)
         {
-            Destroy(gameBoard[index, j]);
+            Destroy(gameBoard[block, line]);
         }
+        DropBlocksOnLine(line + 1);
     }
 
     
-    void DropBlocksByOne()
+    void DropBlocksOnLine(int line)
     {
-        for (int i = gameBoard.GetLength(0) - 1; i >= 0; i--)
+        for (int block = 0; block < gameBoard.GetLength(0); block++)
         {
-            for (int j = 0; j < gameBoard.GetLength(1); j++)
-            {
-                gameBoard[i, j] = gameBoard[i - 1, j];
-            }
+
+            //this aint working
+            Debug.Log("Before: " + gameBoard[block, line - 1]);
+            gameBoard[block, line - 1] = gameBoard[block, line];
+            Debug.Log("After: " + gameBoard[block, line - 1]);
+            gameBoard[block, line] = null;
+            Debug.Log("After after: " + gameBoard[block, line - 1]);
+            mover = gameBoard[block, line - 1].transform.parent.gameObject.GetComponent<Mover>();
+            mover.Move(0f, -1f);
         }
     }
     
