@@ -25,7 +25,7 @@ public class Rotator : MonoBehaviour {
 
     void Rotate()
     {
-        if (tag == "Rotates")
+        if (tag == "Current")
         {
             gameObject.transform.rotation *= Quaternion.Euler(0, 0, 90);
             AdjustTetrimino();

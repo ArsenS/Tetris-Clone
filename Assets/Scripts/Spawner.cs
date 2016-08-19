@@ -10,14 +10,13 @@ public class Spawner : MonoBehaviour {
 
     void Start()
     {
-        Application.targetFrameRate = 60;
         tetrimino = SpawnRandomTetrimino();
         dropper = tetrimino.GetComponent<Dropper>();
     }
 
     void Update()
     {
-        if (dropper.TetriminoHasLanded() || !dropper.TetriminoCanDrop())
+        if (dropper.TetriminoHasLanded())
         {
             tetrimino = SpawnRandomTetrimino();
             dropper = tetrimino.GetComponent<Dropper>();

@@ -10,28 +10,19 @@ public class Mover : MonoBehaviour {
     private float timer = 0f;
     private float stepTime = 0.075f;
 
-    private Dropper dropper;
-
     void Start()
     {
-        dropper = GetComponent<Dropper>();
         grid = GameObject.FindWithTag("Grid").GetComponent<Grid>();
     }
 
     void Update()
     {
         moveHorizontal = Input.GetAxisRaw("Horizontal");
-        moveVertical = Input.GetAxisRaw("Vertical");
-
-        if (moveHorizontal != 0 || moveVertical > 0)
-        {
-            moveVertical = 0;
-        }
 
         timer += Time.deltaTime;
-        if (timer >= stepTime && dropper.TetriminoCanDrop())
+        if (timer >= stepTime && TetriminoCanMove(moveHorizontal, 0f))
         {
-            Move(moveHorizontal, moveVertical);
+            Move(moveHorizontal, 0f);
             timer = 0f;
         }
     }
@@ -75,7 +66,7 @@ public class Mover : MonoBehaviour {
     {
         if (TetriminoWithinBorders(moveHorizontal))
         {
-            if (gameObject.tag != "Landed" && TetriminoCanMove(moveHorizontal, moveVertical))
+            if (gameObject.tag == "Current" && TetriminoCanMove(moveHorizontal, moveVertical))
             {
                 gameObject.transform.position = new Vector3(Mathf.Round(gameObject.transform.position.x + moveHorizontal), Mathf.Round(gameObject.transform.position.y + moveVertical), gameObject.transform.position.z);
             }
