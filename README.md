@@ -1,4 +1,3 @@
-# Tetris-Clone
 Tetris clone made in Unity Engine
 ---------------------------------
 
