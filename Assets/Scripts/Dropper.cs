@@ -22,48 +22,49 @@ public class Dropper : MonoBehaviour
 
     void Update()
     {
-
-        if (waitingForLock)
+        if (gameObject.tag != "Next" && gameObject.tag != "Held")
         {
-            if (!TetriminoCanDrop() && lockTimer >= lockDelay)
+            if (waitingForLock)
             {
-                gameObject.tag = "Landed";
-                grid.SetTetriminoToGrid(this.gameObject);
-                waitingForLock = false;
-                lockTimer = 0f;
-                grid.ClearFullLines();
-            }
-            else
-            {
-                //Debug.Log(Time.deltaTime);
-                lockTimer += Time.deltaTime;
-            }
-        }
-        else
-        {
-            stepTimer += Time.deltaTime;
-
-            if (Input.GetButton("Down"))
-            {
-                stepTime = 0.015f;
-            }
-            else
-            {
-                stepTime = 0.5f;
-            }
-
-            if (stepTimer * (level * 0.5f) >= stepTime)
-            {
-                if (TetriminoCanDrop() && gameObject.tag != "Landed")
+                if (!TetriminoCanDrop() && lockTimer >= lockDelay)
                 {
-                    mover.Move(0f, -1f);
+                    gameObject.tag = "Landed";
+                    grid.SetTetriminoToGrid(this.gameObject);
+                    waitingForLock = false;
+                    lockTimer = 0f;
+                    grid.ClearFullLines();
                 }
                 else
                 {
-                    waitingForLock = true;
+                    lockTimer += Time.deltaTime;
+                }
+            }
+            else
+            {
+                stepTimer += Time.deltaTime;
+
+                if (Input.GetButton("Down"))
+                {
+                    stepTime = 0.015f;
+                }
+                else
+                {
+                    stepTime = 0.5f;
                 }
 
-                stepTimer = 0f;
+                if (stepTimer * (level * 0.5f) >= stepTime)
+                {
+                    if (TetriminoCanDrop() && gameObject.tag == "Current")
+                    {
+                        mover.Move(0f, -1f);
+                    }
+                    else
+                    {
+                        waitingForLock = true;
+                    }
+
+                    stepTimer = 0f;
+                }
             }
         }
     }
