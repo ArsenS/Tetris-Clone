@@ -50,6 +50,7 @@ public class Grid : MonoBehaviour {
             {
                 ClearLine(line);
                 DropBlocks(line);
+                line--;
             }
         }
     }

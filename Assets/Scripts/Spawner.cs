@@ -38,7 +38,7 @@ public class Spawner : MonoBehaviour {
     {
         int index = Random.Range(0, tetriminos.Length);
 
-        return (GameObject)Instantiate(tetriminos[index], new Vector3(-6f, 15.5f, 0f), Quaternion.identity);
+        return (GameObject)Instantiate(tetriminos[index], new Vector3(-6f, 15.5f, 0f), tetriminos[index].transform.rotation);
     }
 
     void ReadyTetrimino(GameObject tetrimino)
@@ -51,7 +51,7 @@ public class Spawner : MonoBehaviour {
 
     void SendTetriminoToBoard(GameObject tetrimino)
     {
-        tetrimino.transform.position += new Vector3(10f, 2.5f, 0f);
+        tetrimino.transform.position += new Vector3(10f, 3.5f, 0f);
     }
 
     void holdCurrentTetrimino(GameObject tetrimino)
@@ -71,10 +71,9 @@ public class Spawner : MonoBehaviour {
 
     void SwapWithHeldTetrimino(GameObject tetrimino)
     {
-        Vector3 currentTetriminoPosition = tetrimino.transform.position;
 
         tetrimino.transform.position = heldTetrimino.transform.position;
-        heldTetrimino.transform.position = currentTetriminoPosition;
+        heldTetrimino.transform.position = new Vector3(4f, 19f, 0f);
         
         currentTetrimino = heldTetrimino;
         currentTetrimino.tag = "Current";

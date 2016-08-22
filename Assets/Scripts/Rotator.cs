@@ -32,6 +32,11 @@ public class Rotator : MonoBehaviour {
         }
     }
 
+    void TetriminoCanRotate()
+    {
+        //TODO
+    }
+
     void AdjustTetrimino()
     {
         if (!mover.TetriminoWithinBorders())
