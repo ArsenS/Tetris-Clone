@@ -4,6 +4,7 @@ using System.Collections;
 public class Grid : MonoBehaviour {
 
     private GameObject[,] gameGrid = new GameObject[10, 20];
+    private ArrayList tetriminos = new ArrayList();
 
     public bool IsValidPosition(int x, int y)
     {
@@ -18,28 +19,14 @@ public class Grid : MonoBehaviour {
         else return false;
     }
 
-    void PrintBoard()
-    {
-        for (int i = gameGrid.GetLength(0) - 1; i >= 0; i--)
-        {
-            Debug.Log("Line " + i);
-            for (int j = 0; j < gameGrid.GetLength(1); j++)
-            {
-                if(gameGrid[i, j] != null)
-                {
-                    Debug.Log("Yes: "+i+", "+j);
-                }
-            }
-            Debug.Log("---------------");
-        }
-    }
-
     public void SetTetriminoToGrid(GameObject tetrimino)
     {
-        foreach(Transform cube in tetrimino.transform)
+        foreach(Transform block in tetrimino.transform)
         {
-            gameGrid[(int)Mathf.Round(cube.position.x), (int)Mathf.Round(cube.position.y)] = cube.gameObject;
+            gameGrid[(int)Mathf.Round(block.position.x), (int)Mathf.Round(block.position.y)] = block.gameObject;
         }
+
+        tetriminos.Add(tetrimino);
     }
 
     public void ClearFullLines()
@@ -88,10 +75,28 @@ public class Grid : MonoBehaviour {
                     gameGrid[block, line] = gameGrid[block, line + 1];
                     gameGrid[block, line + 1] = null;
                     gameGrid[block, line].transform.position = new Vector3(gameGrid[block, line].transform.position.x, Mathf.Round(gameGrid[block, line].transform.position.y - 1f), gameGrid[block, line].transform.position.z);
-                    //Debug.Log("y: "+gameGrid[block, line].transform.position.y);
                 }
             }
         }
+    }
+
+    public void ReinitializeGrid()
+    {
+        for (int i = 0; i < gameGrid.GetLength(0); i++)
+        {
+            for (int j = 0; j < gameGrid.GetLength(1); j++)
+            {
+                Destroy(gameGrid[i, j]);
+                gameGrid[i, j] = null;
+            }
+        }
+
+        foreach (GameObject tetrimino in tetriminos)
+        {
+            Destroy(tetrimino);
+        }
+
+        tetriminos.Clear();
     }
     
 }

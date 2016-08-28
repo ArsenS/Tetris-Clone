@@ -76,9 +76,9 @@ public class Dropper : MonoBehaviour
 
     public bool TetriminoCanDrop()
     {
-        foreach (Transform cube in transform)
+        foreach (Transform block in transform)
         {
-            if (!CubeCanDrop(cube))
+            if (!blockCanDrop(block))
             {
                 return false;
             }
@@ -86,9 +86,9 @@ public class Dropper : MonoBehaviour
         return true;
     }
 
-    bool CubeCanDrop(Transform cube)
+    bool blockCanDrop(Transform block)
     {
-        if ((Mathf.Round(cube.position.y) - 1f) >= 0f && grid.IsValidPosition((int)Mathf.Round(cube.position.x), (int)Mathf.Round(cube.position.y - 1)))
+        if ((Mathf.Round(block.position.y) - 1f) >= 0f && grid.IsValidPosition((int)Mathf.Round(block.position.x), (int)Mathf.Round(block.position.y - 1)))
         {
             return true;
         }

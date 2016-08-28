@@ -5,32 +5,43 @@ public class Spawner : MonoBehaviour {
 
     public GameObject[] tetriminos = new GameObject[7];
 
+    private bool gameOverState = false;
     private bool holdTetrimino = false;
+    
+    private GameObject currentTetrimino = null;
+    private GameObject nextTetrimino = null;
+    private GameObject heldTetrimino = null;
 
-    private GameObject currentTetrimino;
-    private GameObject nextTetrimino;
-    private GameObject heldTetrimino;
+    private Grid grid;
 
-    void Start()
+    void Awake()
     {
+        grid = GameObject.FindWithTag("Grid").GetComponent<Grid>();
+    }
+
+    void OnEnable()
+    {
+        gameOverState = false;
         currentTetrimino = SpawnRandomTetrimino();
         ReadyTetrimino(currentTetrimino);
-        heldTetrimino = null;
     }
 
     void Update()
     {
         holdTetrimino = Input.GetKeyDown(KeyCode.LeftControl);
 
-        if (holdTetrimino)
+        if (!gameOverState)
         {
-            holdCurrentTetrimino(currentTetrimino);
-        }
+            if (holdTetrimino)
+            {
+                holdCurrentTetrimino(currentTetrimino);
+            }
 
-        if (currentTetrimino.tag == "Landed")
-        {
-            currentTetrimino = nextTetrimino;
-            ReadyTetrimino(currentTetrimino);
+            if (currentTetrimino.tag == "Landed")
+            {
+                currentTetrimino = nextTetrimino;
+                ReadyTetrimino(currentTetrimino);
+            }
         }
     }
 
@@ -52,6 +63,14 @@ public class Spawner : MonoBehaviour {
     void SendTetriminoToBoard(GameObject tetrimino)
     {
         tetrimino.transform.position += new Vector3(10f, 3.5f, 0f);
+
+        foreach (Transform block in tetrimino.transform)
+        {
+            if (!grid.IsValidPosition((int)Mathf.Round(block.position.x), (int)Mathf.Round(block.position.y)))
+            {
+                SetGameOver();
+            }
+        }
     }
 
     void holdCurrentTetrimino(GameObject tetrimino)
@@ -71,7 +90,6 @@ public class Spawner : MonoBehaviour {
 
     void SwapWithHeldTetrimino(GameObject tetrimino)
     {
-
         tetrimino.transform.position = heldTetrimino.transform.position;
         heldTetrimino.transform.position = new Vector3(4f, 19f, 0f);
         
@@ -79,5 +97,22 @@ public class Spawner : MonoBehaviour {
         currentTetrimino.tag = "Current";
         heldTetrimino = tetrimino;
         heldTetrimino.tag = "Held";
+    }
+
+    public void DestroyTetriminos()
+    {
+        Destroy(currentTetrimino);
+        Destroy(heldTetrimino);
+        Destroy(nextTetrimino);
+    }
+
+    void SetGameOver()
+    {
+        gameOverState = true;
+    }
+
+    public bool IsGameOver()
+    {
+        return gameOverState;
     }
 }

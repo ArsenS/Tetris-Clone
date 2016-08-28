@@ -3,12 +3,15 @@ using System.Collections;
 
 public class Rotator : MonoBehaviour {
 
+    private Grid grid;
     private Dropper dropper;
     private Mover mover;
+
     private bool rotate = false;
 
     void Start()
     {
+        grid = GameObject.FindWithTag("Grid").GetComponent<Grid>();
         dropper = GetComponent<Dropper>();
         mover = GetComponent<Mover>();
     }
@@ -25,16 +28,27 @@ public class Rotator : MonoBehaviour {
 
     void Rotate()
     {
-        if (tag == "Current")
+        if (gameObject.tag == "Current")
         {
             gameObject.transform.rotation *= Quaternion.Euler(0, 0, 90);
+            if (!TetriminoCanRotate())
+            {
+                gameObject.transform.rotation *= Quaternion.Euler(0, 0, -90);
+            }
             AdjustTetrimino();
         }
     }
 
-    void TetriminoCanRotate()
+    bool TetriminoCanRotate()
     {
-        //TODO
+        foreach (Transform block in transform)
+        {
+            if (!grid.IsValidPosition((int)Mathf.Round(block.position.x), (int)Mathf.Round(block.position.y)))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     void AdjustTetrimino()

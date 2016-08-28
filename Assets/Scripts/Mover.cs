@@ -3,10 +3,11 @@ using System.Collections;
 
 public class Mover : MonoBehaviour {
 
-    public Grid grid;
-    public float moveHorizontal;
-    public float moveVertical;
+    
+    private float moveHorizontal;
+    private float moveVertical;
 
+    private Grid grid;
     private float timer = 0f;
     private float stepTime = 0.075f;
 
@@ -29,9 +30,9 @@ public class Mover : MonoBehaviour {
 
     public bool TetriminoWithinBorders(float horizontalMove = 0f)
     {
-        foreach (Transform cube in transform)
+        foreach (Transform block in transform)
         {
-            if (!CubeWithinBorders(cube, horizontalMove))
+            if (!blockWithinBorders(block, horizontalMove))
             {
                 return false;
             }
@@ -39,9 +40,9 @@ public class Mover : MonoBehaviour {
         return true;
     }
 
-    bool CubeWithinBorders(Transform cube, float horizontalMove = 0f) 
+    bool blockWithinBorders(Transform block, float horizontalMove = 0f) 
     {
-        if (Mathf.Round(cube.position.x + horizontalMove) >= 0 && Mathf.Round(cube.position.x + horizontalMove) <= 9)
+        if (Mathf.Round(block.position.x + horizontalMove) >= 0 && Mathf.Round(block.position.x + horizontalMove) <= 9)
         {
             return true;
         }
@@ -51,9 +52,9 @@ public class Mover : MonoBehaviour {
 
     bool TetriminoCanMove(float horizontalMove, float verticalMove)
     {
-        foreach (Transform cube in transform)
+        foreach (Transform block in transform)
         {
-            if (!grid.IsValidPosition((int)Mathf.Round(cube.position.x + horizontalMove), (int)Mathf.Round(cube.position.y + verticalMove)))
+            if (!grid.IsValidPosition((int)Mathf.Round(block.position.x + horizontalMove), (int)Mathf.Round(block.position.y + verticalMove)))
             {
                 return false;
             }
