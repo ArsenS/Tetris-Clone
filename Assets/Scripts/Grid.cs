@@ -4,7 +4,14 @@ using System.Collections;
 public class Grid : MonoBehaviour {
 
     private GameObject[,] gameGrid = new GameObject[10, 20];
-    private ArrayList tetriminos = new ArrayList();
+    private ArrayList tetriminosInGrid = new ArrayList();
+
+    private ScoreManager scoreManager;
+
+    void Start()
+    {
+        scoreManager = GameObject.Find("GameManager/ScoreManager").GetComponent<ScoreManager>();
+    }
 
     public bool IsValidPosition(int x, int y)
     {
@@ -26,20 +33,26 @@ public class Grid : MonoBehaviour {
             gameGrid[(int)Mathf.Round(block.position.x), (int)Mathf.Round(block.position.y)] = block.gameObject;
         }
 
-        tetriminos.Add(tetrimino);
+        tetriminosInGrid.Add(tetrimino);
     }
 
     public void ClearFullLines()
     {
+        int clearCount = 0;
+
         for (int line = 0; line < gameGrid.GetLength(1); line++)
         {
             if (LineIsFull(line))
             {
                 ClearLine(line);
                 DropBlocks(line);
+                clearCount++;
                 line--;
             }
         }
+
+        scoreManager.AddPoints(clearCount);
+        scoreManager.UpdateLinesCleared(clearCount);
     }
 
     bool LineIsFull(int line)
@@ -91,12 +104,12 @@ public class Grid : MonoBehaviour {
             }
         }
 
-        foreach (GameObject tetrimino in tetriminos)
+        foreach (GameObject tetrimino in tetriminosInGrid)
         {
             Destroy(tetrimino);
         }
 
-        tetriminos.Clear();
+        tetriminosInGrid.Clear();
     }
     
 }

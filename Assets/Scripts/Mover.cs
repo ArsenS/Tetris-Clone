@@ -3,9 +3,7 @@ using System.Collections;
 
 public class Mover : MonoBehaviour {
 
-    
     private float moveHorizontal;
-    private float moveVertical;
 
     private Grid grid;
     private float timer = 0f;

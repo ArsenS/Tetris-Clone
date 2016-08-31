@@ -31,11 +31,12 @@ public class Rotator : MonoBehaviour {
         if (gameObject.tag == "Current")
         {
             gameObject.transform.rotation *= Quaternion.Euler(0, 0, 90);
+            AdjustTetrimino();
             if (!TetriminoCanRotate())
             {
                 gameObject.transform.rotation *= Quaternion.Euler(0, 0, -90);
             }
-            AdjustTetrimino();
+            
         }
     }
 

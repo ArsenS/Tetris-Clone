@@ -5,8 +5,9 @@ public class Spawner : MonoBehaviour {
 
     public GameObject[] tetriminos = new GameObject[7];
 
-    private bool gameOverState = false;
+    private bool gameOver = false;
     private bool holdTetrimino = false;
+    private bool swappedOnce = false;
     
     private GameObject currentTetrimino = null;
     private GameObject nextTetrimino = null;
@@ -21,7 +22,7 @@ public class Spawner : MonoBehaviour {
 
     void OnEnable()
     {
-        gameOverState = false;
+        gameOver = false;
         currentTetrimino = SpawnRandomTetrimino();
         ReadyTetrimino(currentTetrimino);
     }
@@ -30,9 +31,9 @@ public class Spawner : MonoBehaviour {
     {
         holdTetrimino = Input.GetKeyDown(KeyCode.LeftControl);
 
-        if (!gameOverState)
+        if (!gameOver)
         {
-            if (holdTetrimino)
+            if (holdTetrimino && !swappedOnce)
             {
                 holdCurrentTetrimino(currentTetrimino);
             }
@@ -51,13 +52,14 @@ public class Spawner : MonoBehaviour {
 
         return (GameObject)Instantiate(tetriminos[index], new Vector3(-6f, 15.5f, 0f), tetriminos[index].transform.rotation);
     }
-
+    
     void ReadyTetrimino(GameObject tetrimino)
     {
         tetrimino.tag = "Current";
         currentTetrimino = tetrimino;
         SendTetriminoToBoard(tetrimino);
         nextTetrimino = SpawnRandomTetrimino();
+        swappedOnce = false;
     }
 
     void SendTetriminoToBoard(GameObject tetrimino)
@@ -97,6 +99,18 @@ public class Spawner : MonoBehaviour {
         currentTetrimino.tag = "Current";
         heldTetrimino = tetrimino;
         heldTetrimino.tag = "Held";
+
+        swappedOnce = true;
+    }
+
+    public int GetLevelForCurrentTetrimino()
+    {
+        return currentTetrimino.GetComponent<Dropper>().GetLevel();
+    }
+
+    public void SetLevelForCurrentTetrimino(int level)
+    {
+        currentTetrimino.GetComponent<Dropper>().SetLevel(level);
     }
 
     public void DestroyTetriminos()
@@ -108,11 +122,11 @@ public class Spawner : MonoBehaviour {
 
     void SetGameOver()
     {
-        gameOverState = true;
+        gameOver = true;
     }
 
     public bool IsGameOver()
     {
-        return gameOverState;
+        return gameOver;
     }
 }

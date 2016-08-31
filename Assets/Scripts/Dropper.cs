@@ -6,7 +6,8 @@ public class Dropper : MonoBehaviour
     public Grid grid;
     public Mover mover;
 
-    private int level = 1;
+    private int currentLevel;
+
     private float stepTimer = 0f;
     private float stepTime = 0.5f;
     private bool waitingForLock = false;
@@ -52,7 +53,7 @@ public class Dropper : MonoBehaviour
                     stepTime = 0.5f;
                 }
 
-                if (stepTimer * (level * 0.5f) >= stepTime)
+                if (stepTimer * (currentLevel * 0.5f) >= stepTime)
                 {
                     if (TetriminoCanDrop() && gameObject.tag == "Current")
                     {
@@ -69,16 +70,21 @@ public class Dropper : MonoBehaviour
         }
     }
 
-    public bool TetriminoHasLanded()
+    public int GetLevel()
     {
-        return gameObject.tag == "Landed";
+        return currentLevel;
+    }
+
+    public void SetLevel(int newLevel)
+    {
+        currentLevel = newLevel;
     }
 
     public bool TetriminoCanDrop()
     {
         foreach (Transform block in transform)
         {
-            if (!blockCanDrop(block))
+            if (!BlockCanDrop(block))
             {
                 return false;
             }
@@ -86,7 +92,7 @@ public class Dropper : MonoBehaviour
         return true;
     }
 
-    bool blockCanDrop(Transform block)
+    bool BlockCanDrop(Transform block)
     {
         if ((Mathf.Round(block.position.y) - 1f) >= 0f && grid.IsValidPosition((int)Mathf.Round(block.position.x), (int)Mathf.Round(block.position.y - 1)))
         {
