@@ -8,7 +8,6 @@
 *.sln.docstates
 Assets/Scripts/TODO.txt
 Assets/Scripts/FPSDisplay.cs
-Library/
 Build/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
